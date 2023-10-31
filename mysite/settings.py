@@ -41,7 +41,7 @@ CORS_ALLOWED_ORIGINS = [
     
 
 ]
-CSRF_TRUSTED_ORIGINS = ["https://gun-control-backend-django.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://guncontrolbackenddjango-production.up.railway.app"]
 
 
 CORS_ALLOW_ALL_ORIGINS = True
