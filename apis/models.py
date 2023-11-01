@@ -8,26 +8,7 @@ from django.core.files import File
 
 
 
-class Products(models.Model):
-    itemName = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.CharField(max_length=255)  # Specify the max_length for the quantity field
-    image = models.ImageField(upload_to='product_images/')
 
-    def __str__(self):
-        return self.itemName
-
-def upload_location(instance, filename):
-    ext = filename.split(".")[-1]
-    shop = re.sub(r'\W+', '', instance.shop.shopname)
-    item_name = re.sub(r'\W+', '', instance.title)
-    category = re.sub(r'\W+', '', instance.category)
-    num = random.randint(1000, 9999)
-
-    filename = "{}.{}.{}".format(item_name, category, num)
-
-    return "{}/{}.{}".format(shop, filename, ext)
 
 
 class Shop(models.Model):

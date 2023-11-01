@@ -13,8 +13,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer
-from .models import Products, Product, Shop
+from .serializers import UserSerializer, ProductSerializer, ShopSerializer
+from .models import Product, Shop
 from django_eventstream import send_event
 
 class ProductListView(APIView):
@@ -58,40 +58,9 @@ class LoginView(APIView):
         return Response({'message': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ShopInventoryView(APIView):
-    authentication_classes = []
-    permission_classes = []
-    
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
-    def get(self, request, *args, **kwargs):
-        inventory_data = {
-            'cement_price__avg': Product.objects.filter(title='cement').aggregate(Avg('price'))['price__avg'] or 0,
-            'sand_price__avg': Product.objects.filter(title='sand').aggregate(Avg('price'))['price__avg'] or 0,
-            'aggregate_price__avg': Product.objects.filter(title='aggregate').aggregate(Avg('price'))['price__avg'] or 0,
-        }
 
-        response_data = {
-            'cement_price_avg': inventory_data['cement_price__avg'],
-            'sand_price_avg': inventory_data['sand_price__avg'],
-            'aggregate_price_avg': inventory_data['aggregate_price__avg'],
-        }
 
-        return Response(response_data, status=status.HTTP_200_OK)
 
-class ComponentsView(APIView):
-    authentication_classes = []
-    permission_classes = []
-    
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
-    def get(self, request, *args, **kwargs):
-        components = ['Concrete', 'Bricks', 'Steel']
-        return Response(components)
 class CategoriesView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -116,25 +85,7 @@ class CategoriesView(APIView):
 
 
 
-class RatesView(APIView):
-    authentication_classes = []
-    permission_classes = []
 
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        component = data['component']
-        selected_class = data['class']
-        labour_costs = data['labourCosts']
-        profit_overheads = data['profitOverheads']
-        print('component:', component, 'selected_class:', selected_class, 'labour_costs:', labour_costs, 'profit_overheads: ',profit_overheads)
-        
-        # Process the data and calculate the rate
-        rate = utility(component=component, selected_class=selected_class, labour_costs=labour_costs, profit_overheads=profit_overheads)
-        print(rate)
-        return JsonResponse(rate)
 
 class ProductsUpload(APIView):
     authentication_classes = []
