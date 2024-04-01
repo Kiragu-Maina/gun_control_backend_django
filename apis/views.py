@@ -23,6 +23,25 @@ from django_eventstream import send_event
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from .models import Profile
+
+class UserInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        try:
+            profile = user.profile  # Access the related Profile
+            user_data = {
+                'name': user.username,  # or user.get_full_name() if you use the full name
+                'email': user.email,
+                'about': profile.about,  # Correctly access 'about' from the user's profile
+            }
+            return Response(user_data)
+        except Profile.DoesNotExist:
+            # Handle case where user profile does not exist
+            raise Http404("User profile not found")
+
 class CartItemsView(APIView):
     permission_classes = [IsAuthenticated]
 

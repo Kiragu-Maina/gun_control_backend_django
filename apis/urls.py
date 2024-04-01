@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.urls import path, include
 from .views import ShopInventoryView, ComponentsView, RatesView, RegisterView, LoginView, ProductsView, ProductsUpload, ProductListView, CheckShop, CreateShop, CategoriesView, HandleReturnView, AddToCartView, CreateOrderView
-from .views import MedicationViewSet, CartItemsView, OrderStatementView
+from .views import MedicationViewSet, CartItemsView, OrderStatementView, UserInfoView
 # from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -44,6 +44,6 @@ urlpatterns = [
     path('create-order/', CreateOrderView.as_view(), name='create-order'),
     path('cart/items/', CartItemsView.as_view(), name='cart-items'),
     path('orders/', OrderStatementView.as_view(), name='order-statement'),
-
+    path('user/info/', UserInfoView.as_view(), name='user-info'),
     path('', include(router.urls)),
 ]   
