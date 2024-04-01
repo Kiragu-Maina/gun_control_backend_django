@@ -4,7 +4,7 @@ import re
 from PIL import Image
 from io import BytesIO
 from django.core.files import File
-
+from django.contrib.auth.models import User  # Import the User model
 
 class Medication(models.Model):
     name = models.CharField(max_length=255)
