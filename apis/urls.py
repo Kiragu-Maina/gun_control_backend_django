@@ -26,7 +26,7 @@ router.register(r'medications', MedicationViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    
     path('shop-inventory/', ShopInventoryView.as_view(), name='shop-inventory'),
     path('components/', ComponentsView.as_view(), name='components'),
     path('rates/', RatesView.as_view(), name='rates'),
@@ -39,4 +39,5 @@ urlpatterns = [
     path('categories/', CategoriesView.as_view(), name='categories'),
     path('return/', HandleReturnView.as_view(), name='return'),
     path('addtocart/', AddToCartView.as_view(), name='addtocart'),
+    path('', include(router.urls)),
 ]   
