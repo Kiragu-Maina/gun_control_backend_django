@@ -18,13 +18,16 @@ from .models import Products, Product, Shop, Medication, Cart, CartItem
 from django.shortcuts import get_object_or_404
 from .serializers import CartItemSerializer 
 from django_eventstream import send_event
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 class AddToCartView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         user = request.user
-        if not user.is_authenticated:
-            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+       
         medication_id = request.data.get('medication_id')
         quantity = request.data.get('quantity', 1)
         medication = get_object_or_404(Medication, pk=medication_id)
