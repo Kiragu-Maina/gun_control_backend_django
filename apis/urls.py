@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'medications', MedicationViewSet)
-router.register(r'addtocart', AddToCartView)
+# router.register(r'addtocart', AddToCartView)
 
 
 urlpatterns = [
@@ -39,6 +39,6 @@ urlpatterns = [
     path('createshop/', CreateShop.as_view(), name='createshop'),   
     path('categories/', CategoriesView.as_view(), name='categories'),
     path('return/', HandleReturnView.as_view(), name='return'),
-    # path('addtocart/', AddToCartView.as_view(), name='addtocart'),
+    path('addtocart/', AddToCartView.as_view(), name='add-to-cart'),
     path('', include(router.urls)),
 ]   
