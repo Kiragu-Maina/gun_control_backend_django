@@ -29,7 +29,7 @@ class AddToCartView(APIView):
         user = request.user
         print(user)
 
-        medication_id = request.data.get('medication_id')
+        medication_id = request.data.get('medicationId')
         print(medication_id)
         quantity = request.data.get('quantity', 1)
         medication = get_object_or_404(Medication, pk=medication_id)
