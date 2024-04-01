@@ -24,25 +24,38 @@ from rest_framework.permissions import IsAuthenticated
 
 class AddToCartView(APIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         user = request.user
-        print(user)
 
-        medication_id = request.data.get('medicationId')
-        print(medication_id)
-        quantity = request.data.get('quantity', 1)
+        medication_id = request.data.get('medication_id')
+        requested_quantity = int(request.data.get('quantity', 1))
+
         medication = get_object_or_404(Medication, pk=medication_id)
+
+        # Check if requested quantity exceeds available stock
+        if requested_quantity > medication.stock_quantity:
+            return Response({"error": "Not enough stock available"}, status=status.HTTP_400_BAD_REQUEST)
 
         cart, created = Cart.objects.get_or_create(user=user)
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             medication=medication,
-            defaults={'quantity': quantity},
+            defaults={'quantity': requested_quantity},
         )
         if not created:
-            cart_item.quantity += int(quantity)
+            # Update the quantity if adding more of an existing item
+            new_quantity = cart_item.quantity + requested_quantity
+            # Check again for the total quantity against stock
+            if new_quantity > medication.stock_quantity:
+                return Response({"error": "Not enough stock available for the total requested quantity"}, status=status.HTTP_400_BAD_REQUEST)
+            cart_item.quantity = new_quantity
             cart_item.save()
+
+        Optionally, you can decrease the stock_quantity of the medication
+        medication.stock_quantity -= requested_quantity
+        medication.save()
 
         return Response({"message": "Medication added to cart successfully"})
 
