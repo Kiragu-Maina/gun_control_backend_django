@@ -14,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path
+from django.urls import path, include
 from .views import ShopInventoryView, ComponentsView, RatesView, RegisterView, LoginView, ProductsView, ProductsUpload, ProductListView, CheckShop, CreateShop, CategoriesView, HandleReturnView
+from .views import MedicationViewSet
+# from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+router.register(r'medications', MedicationViewSet)
 
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('shop-inventory/', ShopInventoryView.as_view(), name='shop-inventory'),
     path('components/', ComponentsView.as_view(), name='components'),
     path('rates/', RatesView.as_view(), name='rates'),
