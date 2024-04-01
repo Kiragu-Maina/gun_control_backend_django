@@ -14,7 +14,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer, MedicationSerializer
-from .models import Products, Product, Shop
+from .models import Products, Product, Shop, Medication
 from django_eventstream import send_event
 
 class MedicationViewSet(viewsets.ModelViewSet):
