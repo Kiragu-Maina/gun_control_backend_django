@@ -53,7 +53,7 @@ class AddToCartView(APIView):
             cart_item.quantity = new_quantity
             cart_item.save()
 
-        Optionally, you can decrease the stock_quantity of the medication
+        
         medication.stock_quantity -= requested_quantity
         medication.save()
 
