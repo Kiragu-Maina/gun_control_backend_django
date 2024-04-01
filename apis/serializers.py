@@ -20,13 +20,19 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
     class Meta:
         model = CartItem
-        fields = ['id', 'medication', 'quantity', 'name']
+        fields = ['id', 'medication', 'quantity', 'name', 'price']
 
     
     def get_name(self, obj):
-        return obj.medication.name
+        # Ensure that medication is related to obj and has a name attribute
+        return obj.medication.name if obj.medication else "No Name"
+
+    def get_price(self, obj):
+        # Ensure that medication is related to obj and has a price attribute
+        return obj.medication.price if obj.medication else 0.0
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
