@@ -9,14 +9,18 @@ from rates.utils import utility
 import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer
+from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer, MedicationSerializer
 from .models import Products, Product, Shop
 from django_eventstream import send_event
 
+class MedicationViewSet(viewsets.ModelViewSet):
+    queryset = Medication.objects.all()
+    serializer_class = MedicationSerializer
+    
 class ProductListView(APIView):
     permission_classes = [AllowAny]
     
