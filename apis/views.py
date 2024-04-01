@@ -31,7 +31,9 @@ class CartItemsView(APIView):
         try:
             cart = Cart.objects.get(user=user)
             cart_items = CartItem.objects.filter(cart=cart)
+            
             serializer = CartItemSerializer(cart_items, many=True)
+            # from serializer.data get medication.itemName then append as name to response
             return Response(serializer.data)
         except Cart.DoesNotExist:
             return Response({"message": "No cart found for this user"}, status=404)

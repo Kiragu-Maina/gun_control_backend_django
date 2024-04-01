@@ -19,9 +19,14 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ['id', 'created_at', 'status', 'total_cost', 'items']
 
 class CartItemSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
     class Meta:
         model = CartItem
-        fields = ['id', 'medication', 'quantity']
+        fields = ['id', 'medication', 'quantity', 'name']
+
+    
+    def get_name(self, obj):
+        return obj.medication.itemName
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
