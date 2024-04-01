@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.urls import path, include
 from .views import ShopInventoryView, ComponentsView, RatesView, RegisterView, LoginView, ProductsView, ProductsUpload, ProductListView, CheckShop, CreateShop, CategoriesView, HandleReturnView
-from .views import MedicationViewSet
+from .views import MedicationViewSet, AddToCartView
 # from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -37,5 +37,6 @@ urlpatterns = [
     path('checkshop/<str:username>/', CheckShop.as_view(), name='checkshop'),
     path('createshop/', CreateShop.as_view(), name='createshop'),   
     path('categories/', CategoriesView.as_view(), name='categories'),
-    path('return/', HandleReturnView.as_view(), name='return')
+    path('return/', HandleReturnView.as_view(), name='return'),
+    path('add-to-cart/', AddToCartView.as_view(), name='add-to-cart'),
 ]   
