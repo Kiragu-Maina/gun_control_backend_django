@@ -38,5 +38,5 @@ urlpatterns = [
     path('createshop/', CreateShop.as_view(), name='createshop'),   
     path('categories/', CategoriesView.as_view(), name='categories'),
     path('return/', HandleReturnView.as_view(), name='return'),
-    path('add-to-cart/', AddToCartView.as_view(), name='add-to-cart'),
+    path('addtocart/', AddToCartView.as_view(), name='addtocart'),
 ]   
