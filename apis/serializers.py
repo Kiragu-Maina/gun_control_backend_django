@@ -4,6 +4,13 @@ from .models import Products, Product, Shop
 
 from .models import Medication
 
+from .models import CartItem
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['id', 'medication', 'quantity']
+
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
