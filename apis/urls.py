@@ -15,8 +15,8 @@ Including another URLconf
 """
 
 from django.urls import path, include
-from .views import ShopInventoryView, ComponentsView, RatesView, RegisterView, LoginView, ProductsView, ProductsUpload, ProductListView, CheckShop, CreateShop, CategoriesView, HandleReturnView
-from .views import MedicationViewSet, AddToCartView
+from .views import ShopInventoryView, ComponentsView, RatesView, RegisterView, LoginView, ProductsView, ProductsUpload, ProductListView, CheckShop, CreateShop, CategoriesView, HandleReturnView, AddToCartView
+from .views import MedicationViewSet
 # from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
