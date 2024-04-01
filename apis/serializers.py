@@ -26,7 +26,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     
     def get_name(self, obj):
-        return obj.medication.itemName
+        return obj.medication.name
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
