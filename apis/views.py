@@ -14,8 +14,32 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer, MedicationSerializer
-from .models import Products, Product, Shop, Medication
+from .models import Products, Product, Shop, Medication, Cart, CartItem
+from django.shortcuts import get_object_or_404
+from .serializers import CartItemSerializer 
 from django_eventstream import send_event
+
+class AddToCartView(APIView):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        medication_id = request.data.get('medication_id')
+        quantity = request.data.get('quantity', 1)
+        medication = get_object_or_404(Medication, pk=medication_id)
+
+        cart, created = Cart.objects.get_or_create(user=user)
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            medication=medication,
+            defaults={'quantity': quantity},
+        )
+        if not created:
+            cart_item.quantity += int(quantity)
+            cart_item.save()
+
+        return Response({"message": "Medication added to cart successfully"})
 
 class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
