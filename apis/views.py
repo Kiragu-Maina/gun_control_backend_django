@@ -15,11 +15,60 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .serializers import UserSerializer, ProductsSerializer, ProductSerializer, ShopSerializer, MedicationSerializer
 from .models import Products, Product, Shop, Medication, Cart, CartItem
+from .models import Cart, Order, OrderItem
+from .serializers import OrderSerializer, CartItemSerializer
 from django.shortcuts import get_object_or_404
 from .serializers import CartItemSerializer 
 from django_eventstream import send_event
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+class CartItemsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = CartItemSerializer(cart_items, many=True)
+            return Response(serializer.data)
+        except Cart.DoesNotExist:
+            return Response({"message": "No cart found for this user"}, status=404)
+        
+class CreateOrderView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        cart_items = cart.items.all()
+
+        if not cart_items:
+            return Response({'error': 'Your cart is empty'}, status=400)
+
+        # Create an order
+        order = Order.objects.create(user=user)
+        total_cost = 0
+
+        # Move items from cart to order
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                medication=item.medication,
+                quantity=item.quantity,
+                price=item.medication.price
+            )
+            total_cost += item.medication.price * item.quantity
+
+        order.total_cost = total_cost
+        order.save()
+
+        # Clear the cart
+        cart.items.all().delete()
+
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=201)
 
 
 class AddToCartView(APIView):

@@ -4,7 +4,19 @@ from .models import Products, Product, Shop
 
 from .models import Medication
 
-from .models import CartItem
+from .models import CartItem, OrderItem, Order
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['medication', 'quantity', 'price']
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'created_at', 'status', 'total_cost', 'items']
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
